@@ -3,10 +3,10 @@ import AuthContext from "../authContext/authProvider";
 
 const Home=()=>{
     const {logOutUser}=useContext(AuthContext)
-    return <div>
-        welcome Home
-        <button onClick={logOutUser}>Log out</button>
-    </div>
+    return(<div className="text-white absolute top-20">
+    welcome Home
+    <button onClick={logOutUser}>Log out</button>
+</div>) 
 }
 
 export default Home;
