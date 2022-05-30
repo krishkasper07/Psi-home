@@ -86,7 +86,7 @@ const AnimationCard = ({ image,note}) => {
         <motion.div
           variants={cardVariants}
           className="bg-slate-800 shadow-inner w-60 md:w-96
-          text-xl flex flex-col justify-center items-center rounded-xl h-[450px] p-8 hover:bg-slate-900"
+          text-xl flex flex-col justify-center items-center rounded-xl h-[450px] p-8 hover:bg-slate-900 cursor-pointer hover:h-[50vh] hover:delay-50 hover:duration-300"
         >
          <img src={image} alt="workImg" className="md:w-56 w-52 h-52 md:h-56 rounded-lg"/>
          <span className="text-center font-bold">
