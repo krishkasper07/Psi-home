@@ -11,11 +11,13 @@ import cs from '../assets/cs.gif';
 import activity from '../assets/activity.gif';
 import {useContext} from 'react'
 import AuthContext from "../authContext/authProvider";
+import { ThemeContext } from "../App";
 
 function LandingPage() {
   const navigate=useNavigate()
   const {user,logOutUser}=useContext(AuthContext)
-  const food = [
+  const {dark}=useContext(ThemeContext)
+  const pagesCard = [
     [orders,"Look Into Our Orders In HomePage"],
     [dash,"Check Our Design Status On Dashbord Page"],
     [qr,"Generate Qr-codes in Generate-Qr Page"],
@@ -27,12 +29,12 @@ function LandingPage() {
     <div>
       <NavBar />
       <div className="flex justify-center flex-col items-center">
-        <div className="mt-24 mb-[11rem] text-white flex flex-col justify-center items-center  h-full w-full">
+        <div className={`mt-24 mb-[11rem] ${dark? 'text-white':'text-blue-800'} flex flex-col justify-center items-center  h-full w-full`}>
           <h1 className="mt-2  text-4xl w-full text-center font-extrabold  non-italic">
             WELCOME TO PSI LANDING HERE WE
           </h1>
          <BsArrowDownShort className="text-5xl mt-4"/>
-          {food.map((el,index)=>{
+          {pagesCard.map((el,index)=>{
               return <AnimationCard key={index} image={el[0]}  note={el[1]}/>
           })}    
         </div>
@@ -43,13 +45,13 @@ function LandingPage() {
           onClick={logOutUser}
           >
            Log Out
-        </motion.button>  :<motion.button className="shadow-md shadow-emerald-600   w-36 rounded-lg text-emerald-400 font-semibold bg-emerald-900 h-10"
+        </motion.button>  :<motion.button className={`shadow-md ${dark ? 'shadow-emerald-600 text-emerald-400 bg-emerald-900':'shadow-blue-600 text-blue-400 bg-blue-900'}  w-36 rounded-lg  font-semibold  h-10`}
           whileHover={{ scale: 1.5 }}
           whileTap={{ scale: 0.9 }}
           onClick={()=>navigate("/signIn")}
           >
             Sign In
-        </motion.button> }
+        </motion.button>}
         </div>
       </div>
     </div>

@@ -17,8 +17,7 @@ export const ThemeContext=createContext(null);
 function App() {
   const [dark,setDark]=useState(false);
   const changeTheme=()=>{
-    console.log('clicked')
-    if(dark){
+      if(dark){
       document.body.style.backgroundColor = 'white';
     }else{
       document.body.style.backgroundColor = 'black';

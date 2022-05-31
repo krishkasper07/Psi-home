@@ -13,7 +13,6 @@ import { BiSearchAlt } from "react-icons/bi";
 import shopify from "../assets/shopify.png";
 import save from "../assets/save.png";
 import { motion } from "framer-motion";
-import { GrFormClose } from "react-icons/gr";
 import { AiOutlineFieldNumber,AiOutlineClose } from "react-icons/ai";
 import { useRef } from "react";
 import { ThemeContext } from "../App";
@@ -23,12 +22,10 @@ function Abandoned() {
   const abandonedUrl = process.env.REACT_APP_ABANDONED_URL;
   const [search, setSearch] = useState(false);
   const { dark } = useContext(ThemeContext);
-  console.log(dark);
   const inputRef = useRef(null);
   useEffect(() => {
     const getAbandoned = async () => {
       let response = await axios.get(abandonedUrl);
-      console.log(response);
       setAbandonedOrders(response.data);
     };
     getAbandoned();
@@ -65,7 +62,7 @@ function Abandoned() {
       <div className={`overflow-auto  relative border-4 ${dark ? 'border-emerald-800 ':'border-blue-800'}  mx-4 rounded-md h-[80vh] mt-4 scrollbar-thin  scrollbar-thumb-slate-600 scrollbar-thumb-rounded-full`}>
         <table className={`w-full md:text-md lg:text-lg text-xs`}>
           <thead className="sticky top-0 bg-slate-900 shadow-md shadow-slate-600">
-            <tr className={`w-full h-14 ${dark ? "" : "text-white"}`}>
+            <tr className={`w-full h-14 ${dark ? '':'text-white'}`}>
               <th className="px-2">
                 <div className="flex justify-center">
                   <AiOutlineFieldNumber className="md:text-4xl font-bold" />
@@ -143,10 +140,9 @@ function Abandoned() {
                 return (
                   <tr
                     key={order.id}
-                    white
                     className={`shadow-md shadow-slate-600 ${
                       dark
-                        ? "text-white hover:bg-white hover:text-black"
+                        ? 'hover:bg-white hover:text-black'
                         : "hover:bg-slate-800 hover:text-white"
                     }  cursor-pointer  h-20 font-bold`}
                   >

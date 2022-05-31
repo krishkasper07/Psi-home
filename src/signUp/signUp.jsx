@@ -7,14 +7,19 @@ export default function SignUp() {
   return (
     <div>
         <form onSubmit={signUp}>
-            <label>First Name</label>
-            <input type="text" name="firstName"/>
-            <label>Last Name</label>
-            <input type="text" name='lastName'/>
+            <label>Name</label>
+            <input type="text" name="name"/>
             <label>User Name</label>
             <input type="text" name='userName'/>
             <label>Password Name</label>
             <input type="text" name='password'/>
+            <label>Select Your Department</label>
+           <select name="department">
+             <option>Select Department</option>
+             <option>Design</option>
+             <option>Customer-Support</option>
+             <option>Packing</option>
+           </select>
             <button type='submit'>Register</button>
         </form>
     </div>

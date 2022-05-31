@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState, createContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import jwt_decode from "jwt-decode";
+import { ThemeContext } from "../App";
 
 const AuthContext = createContext();
 
 export default AuthContext;
 
 export function AuthProvider({ children }) {
+  const { dark } = useContext(ThemeContext);
+
   let [user, setUser] = useState(() =>
     localStorage.getItem("authTokens")
       ? jwt_decode(localStorage.getItem("authTokens"))
@@ -27,17 +30,34 @@ export function AuthProvider({ children }) {
 
   const signUp = async (e) => {
     e.preventDefault();
+    if (e.target.department.value==='Select Department'){
+       return toast('Select Your Department',{
+        icon: "😡",
+        style:dark?{
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        }:{},
+      })
+    }
     const data = {
-      firstName: e.target.firstName.value,
-      lastName: e.target.lastName.value,
+      name: e.target.name.value,
       userName: e.target.userName.value,
       password: e.target.password.value,
+      department:e.target.department.value
     };
     axios
       .post("http://localhost:5001/api/signUp", data)
       .then((res) => {
-        toast.success(res.data.message);
-        navigate("/");
+        toast(res.data.message, {
+          icon: "👏",
+          style:dark?{
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          }:{},
+        });
+        navigate("/signIn");
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -53,7 +73,14 @@ export function AuthProvider({ children }) {
     axios
       .post("http://localhost:5001/api/login", data)
       .then((res) => {
-        toast.success(res.data.message);
+        toast(res.data.message, {
+          icon: "🥳",
+          style: dark?{
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          }:{},
+        });
         setAuthToken(res.data);
         setUser(jwt_decode(res.data.accessToken));
         localStorage.setItem("authTokens", JSON.stringify(res.data));
@@ -65,9 +92,21 @@ export function AuthProvider({ children }) {
   };
 
   const logOutUser = async () => {
-   let data=localStorage.getItem('authTokens')
-   let newData={refreshToken:JSON.parse(data).refreshToken}
-  axios.post("http://localhost:5001/api/refreshToken/delete",newData).then(res=>toast.success(res.data.message)).catch(err=>console.log(err))
+    let data = localStorage.getItem("authTokens");
+    let newData = {refreshToken: JSON.parse(data).refreshToken};
+ 
+      axios
+      .post("http://localhost:5001/api/refreshToken/delete", newData)
+      .then((res) => toast(res.data.message, {
+        icon: "😞",
+        style: dark?{
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        }:{},
+      }))
+      .catch((err) => console.log(err));
+    
     setAuthToken(null);
     setUser(null);
     localStorage.removeItem("authTokens");
@@ -79,16 +118,18 @@ export function AuthProvider({ children }) {
       refreshToken: authToken?.refreshToken,
     };
 
-    if (!data === undefined) {
+    if (data !== undefined) {
       await axios
         .post("http://localhost:5001/api/refreshToken", data)
         .then((res) => {
+          console.log(res)
           setAuthToken(res.data);
-          setUser(jwt_decode(res.data.accessToken));
+          setUser(jwt_decode(res.data.refreshToken));
           localStorage.setItem("authTokens", JSON.stringify(res.data));
         })
         .catch((err) => {
           logOutUser();
+          localStorage.removeItem("authTokens");
           console.log("user logged out", err);
         });
     }
@@ -102,9 +143,10 @@ export function AuthProvider({ children }) {
     if (isLoading) {
       updateToken();
     }
-    let timer = 1000 * 60 * 4;
+    let timer = 1000*60*14;
     let interval = setInterval(() => {
       if (authToken) {
+        console.log('hello')
         updateToken();
       }
     }, timer);
@@ -112,7 +154,7 @@ export function AuthProvider({ children }) {
   }, [authToken, isLoading]);
 
   let contextData = {
-    user: user,
+    user:user,
     isLoading: isLoading,
     signUp: signUp,
     signIn: signIn,
