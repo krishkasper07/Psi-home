@@ -122,7 +122,6 @@ export function AuthProvider({ children }) {
       await axios
         .post("http://localhost:5001/api/refreshToken", data)
         .then((res) => {
-          console.log(res)
           setAuthToken(res.data);
           setUser(jwt_decode(res.data.refreshToken));
           localStorage.setItem("authTokens", JSON.stringify(res.data));

@@ -18,8 +18,6 @@ export default function NavBar() {
     isSideMenuOpen ? setisSideMenuOpen(false) : setisSideMenuOpen(true);
   };
 
-  console.log(user);
-
   return (
     <div
       className={`fixed w-full shadow-md ${

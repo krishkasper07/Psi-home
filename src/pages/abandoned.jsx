@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
+import React, { useContext, useState } from "react";
 import { RiBillLine } from "react-icons/ri";
 import { MdOutlineLocalShipping } from "react-icons/md";
 import { HiOutlineCurrencyRupee } from "react-icons/hi";
@@ -15,22 +14,13 @@ import save from "../assets/save.png";
 import { motion } from "framer-motion";
 import { AiOutlineFieldNumber,AiOutlineClose } from "react-icons/ai";
 import { useRef } from "react";
-import { ThemeContext } from "../App";
+import { orderContext, ThemeContext } from "../App";
 
 function Abandoned() {
-  const [abandonedOrders, setAbandonedOrders] = useState([]);
-  const abandonedUrl = process.env.REACT_APP_ABANDONED_URL;
+  const {abandonedOrders}=useContext(orderContext);
   const [search, setSearch] = useState(false);
   const { dark } = useContext(ThemeContext);
   const inputRef = useRef(null);
-  useEffect(() => {
-    const getAbandoned = async () => {
-      let response = await axios.get(abandonedUrl);
-      setAbandonedOrders(response.data);
-    };
-    getAbandoned();
-  }, []);
-
   return (
     <div
       className={`overflow-hidden h-[90vh] rounded-md ${

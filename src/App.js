@@ -8,12 +8,14 @@ import ProtectedRoutes from "./protectedRoutes/protectedRoute";
 import Home from "./pages/home";
 import LandingPage from './pages/landing';
 import Abandoned from "./pages/abandoned";
-import { createContext,useState} from "react";
+import { createContext,useEffect,useState} from "react";
 import GenerateQr from "./pages/generateQr";
 import Scan from "./pages/Scan";
 import Activity from "./pages/Activity";
 import Dashboard from "./pages/dashboard";
+import axios from "axios";
 export const ThemeContext=createContext(null);
+export const orderContext=createContext(null)
 function App() {
   const [dark,setDark]=useState(false);
   const changeTheme=()=>{
@@ -24,10 +26,52 @@ function App() {
     }
     return setDark(!dark)
   }
+
+  const abandonedUrl = process.env.REACT_APP_ABANDONED_URL;
+
+  const shopifyUrl=process.env.REACT_APP_SHOPIFY_URL;
+
+  const dashUrl=process.env.REACT_APP_DASHORDERS;
+
+  const [abandonedOrders, setAbandonedOrders] = useState([]);
+
+  const [allOrders,setAllOrders]=useState([]);
+
+  const[dashOrders,setDashOrders]=useState([]);
+
+  const getAbandoned = async () => {
+    let response = await axios.get(abandonedUrl);
+    setAbandonedOrders(response.data);
+  };
+
+  const getShopifyOrders=async()=>{
+    let response = await axios.get(shopifyUrl);
+    setAllOrders(response.data);
+  }
+
+  const getDashOrders=async()=>{
+    let response = await axios.get(dashUrl);
+    setDashOrders(response.data);
+  }
+
+  useEffect(()=>{
+    getDashOrders();
+    getAbandoned();
+    getShopifyOrders();
+  },[])
+
+  
+
+  let contextData={
+    abandonedOrders:abandonedOrders,
+    homeOrders:allOrders,
+    dashOrders:dashOrders
+  }
   return (
     <>
       <BrowserRouter>
       <ThemeContext.Provider value={{dark,changeTheme}}>
+        <orderContext.Provider value={contextData}>
         <AuthProvider>
           <Routes>
             <Route path="/" element={<LandingPage/>} />
@@ -44,6 +88,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
+        </orderContext.Provider>
         </ThemeContext.Provider>
         <Toaster/>
       </BrowserRouter>
