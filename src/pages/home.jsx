@@ -26,7 +26,7 @@ const Home = () => {
         />
          {search ? (
           <AiOutlineClose
-            className={`w-10 h-8 shadow-sky-700 shadow-md rounded-r-md cursor-pointer ${dark ? 'text-slate-400 hover:bg-slate-800 shadow-emerald-800 bg-slate-900':'text-sky-700'}`}
+            className={`w-10 h-8  shadow-md rounded-r-md cursor-pointer ${dark ? 'text-slate-400 hover:bg-slate-800 shadow-emerald-800 bg-slate-900':'shadow-sky-700 text-sky-700'}`}
             onClick={() => {
              setOrderNumber('')
               setSearch(false);
@@ -34,7 +34,7 @@ const Home = () => {
           />
         ) : (
           <BiSearchAlt
-          className={`w-10 h-8 shadow-sky-700 shadow-md rounded-r-md cursor-pointer ${dark ? 'text-slate-400 hover:bg-slate-800 shadow-emerald-800 bg-slate-900':'text-sky-700'}`}
+          className={`w-10 h-8  shadow-md rounded-r-md cursor-pointer ${dark ? 'text-slate-400 hover:bg-slate-800 shadow-emerald-800 bg-slate-900':'shadow-sky-700 text-sky-700'}`}
             onClick={() => setSearch(true)}
           />
         )}
