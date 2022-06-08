@@ -4,6 +4,9 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    backgroundImage: {
+      'login-light': "url('../src/assets/login-light.jpg')",
+    }
   },
   plugins: [ require('tailwind-scrollbar'),],
 }

@@ -12,7 +12,7 @@ import { createContext,useEffect,useState} from "react";
 import GenerateQr from "./pages/generateQr";
 import Scan from "./pages/Scan";
 import Activity from "./pages/Activity";
-import Dashboard from "./pages/dashboard";
+import Dashboard from "./pages/DashBoard/dashboard";
 import axios from "axios";
 export const ThemeContext=createContext(null);
 export const orderContext=createContext(null)
@@ -33,11 +33,15 @@ function App() {
 
   const dashUrl=process.env.REACT_APP_DASHORDERS;
 
+  const ActivityUrl=process.env.REACT_APP_SCAN;
+
   const [abandonedOrders, setAbandonedOrders] = useState([]);
 
   const [allOrders,setAllOrders]=useState([]);
 
   const[dashOrders,setDashOrders]=useState([]);
+
+  const [activity,setActivity]=useState([]);
 
   const getAbandoned = async () => {
     let response = await axios.get(abandonedUrl);
@@ -54,10 +58,16 @@ function App() {
     setDashOrders(response.data);
   }
 
+  const getActivity=async()=>{
+    let response = await axios.get(ActivityUrl);
+    setActivity(response.data);
+  }
+
   useEffect(()=>{
     getDashOrders();
     getAbandoned();
     getShopifyOrders();
+    getActivity();
   },[])
 
   
@@ -65,7 +75,9 @@ function App() {
   let contextData={
     abandonedOrders:abandonedOrders,
     homeOrders:allOrders,
-    dashOrders:dashOrders
+    dashOrders:dashOrders,
+    scannedOrders:activity,
+    getDashOrders:getDashOrders
   }
   return (
     <>

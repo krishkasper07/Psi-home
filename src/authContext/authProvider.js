@@ -145,7 +145,6 @@ export function AuthProvider({ children }) {
     let timer = 1000*60*14;
     let interval = setInterval(() => {
       if (authToken) {
-        console.log('hello')
         updateToken();
       }
     }, timer);

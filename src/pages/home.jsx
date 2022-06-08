@@ -142,7 +142,8 @@ const Home = () => {
                         dark ? "shadow-emerald-600" : "shadow-sky-700"
                       }`}
                     >
-                      {`${el.billing_address.first_name} ${el.billing_address.last_name}`}
+                      {el.billing_address === undefined ? null:<> {`${el.billing_address.first_name} ${el.billing_address.last_name}`}</>}
+                     
                     </div>
                   </td>
                   <td>
