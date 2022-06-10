@@ -7,7 +7,7 @@ import SignUp from "./signUp/signUp";
 import ProtectedRoutes from "./protectedRoutes/protectedRoute";
 import Home from "./pages/home";
 import LandingPage from './pages/landing';
-import Abandoned from "./pages/abandoned";
+import Abandoned from "./pages/customerService/abandoned";
 import { createContext,useEffect,useState} from "react";
 import GenerateQr from "./pages/generateQr";
 import Scan from "./pages/Scan";
