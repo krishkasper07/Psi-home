@@ -71,7 +71,7 @@ export function AuthProvider({ children }) {
       password: e.target.password.value,
     };
     axios
-      .post("http://localhost:5001/api/login", data)
+      .post(process.env.REACT_APP_LOGIN, data)
       .then((res) => {
         toast(res.data.message, {
           icon: "🥳",
@@ -96,7 +96,7 @@ export function AuthProvider({ children }) {
     let newData = {refreshToken: JSON.parse(data).refreshToken};
  
       axios
-      .post("http://localhost:5001/api/refreshToken/delete", newData)
+      .post(process.env.REACT_APP_DELETE_TOKEN, newData)
       .then((res) => toast(res.data.message, {
         icon: "😞",
         style: dark?{
@@ -120,7 +120,7 @@ export function AuthProvider({ children }) {
 
     if (data !== undefined) {
       await axios
-        .post("http://localhost:5001/api/refreshToken", data)
+        .post(process.env.REACT_APP_GET_TOKEN, data)
         .then((res) => {
           setAuthToken(res.data);
           setUser(jwt_decode(res.data.refreshToken));
