@@ -13,9 +13,11 @@ import GenerateQr from "./pages/generateQr";
 import Scan from "./pages/Scan";
 import Activity from "./pages/Activity";
 import Dashboard from "./pages/DashBoard/dashboard";
+import toast from "react-hot-toast";
 import axios from "axios";
 export const ThemeContext=createContext(null);
-export const orderContext=createContext(null)
+export const orderContext=createContext(null);
+
 function App() {
   const [dark,setDark]=useState(false);
   const changeTheme=()=>{
@@ -34,6 +36,8 @@ function App() {
   const dashUrl=process.env.REACT_APP_DASHORDERS;
 
   const ActivityUrl=process.env.REACT_APP_SCAN;
+
+  const updateDashUrl=process.env.REACT_APP_UPDATE_OPEN_ORDERS;
 
   const [abandonedOrders, setAbandonedOrders] = useState([]);
 
@@ -63,6 +67,10 @@ function App() {
     setActivity(response.data);
   }
 
+  const updateDashOrders=async()=>{
+     await axios.post(updateDashUrl).then(res=>toast(res.data)).catch(err=>console.log(err));
+  }
+
   useEffect(()=>{
     getDashOrders();
     getAbandoned();
@@ -77,7 +85,8 @@ function App() {
     homeOrders:allOrders,
     dashOrders:dashOrders,
     scannedOrders:activity,
-    getDashOrders:getDashOrders
+    getDashOrders:getDashOrders,
+    updateDashOrders,updateDashOrders
   }
   return (
     <>

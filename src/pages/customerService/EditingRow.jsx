@@ -1,7 +1,5 @@
 import React, { useRef } from "react";
-import { AiOutlineClose } from "react-icons/ai";
 import axios from "axios";
-import { FiLink } from "react-icons/fi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import {GiSave} from 'react-icons/gi';
 import toast from "react-hot-toast";

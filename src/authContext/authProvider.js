@@ -129,7 +129,7 @@ export function AuthProvider({ children }) {
         .catch((err) => {
           logOutUser();
           localStorage.removeItem("authTokens");
-          console.log("user logged out", err);
+          // console.log("user logged out", err);
         });
     }
 

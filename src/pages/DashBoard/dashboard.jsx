@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useContext } from "react";
 import { orderContext, ThemeContext } from "../../App";
 import { BiSearchAlt } from "react-icons/bi";
@@ -11,8 +11,10 @@ import { GiBalloons, GiKnightBanner, GiNotebook } from "react-icons/gi";
 import { motion } from "framer-motion";
 import { FaShippingFast } from "react-icons/fa";
 import Select from "./selectCompo";
+import Loading from "../../components/loading";
 export default function Dashboard() {
-  const { dashOrders } = useContext(orderContext);
+  const { dashOrders, updateDashOrders, getDashOrders } =
+    useContext(orderContext);
   const [search, setSearch] = useState(false);
   const { dark } = useContext(ThemeContext);
   const [showCustomerNotes, setCustomerNotes] = useState(false);
@@ -22,7 +24,6 @@ export default function Dashboard() {
   const [showFilters, setFilters] = useState(false);
   const searchRef = useRef("");
   const [eventDate, setEventDate] = useState("");
-
   const [apply, setApply] = useState(false);
 
   const pendingRef = useRef({ checked: false });
@@ -32,7 +33,9 @@ export default function Dashboard() {
   const designCompletedRef = useRef({ checked: false });
   const printingCompletedRef = useRef({ checked: false });
 
-  // console.log(pendingRef.current.checked)
+  const productSearchRef = useRef("");
+
+  const [productSearch, setProductSearch] = useState(false);
 
   const myOrders = () => {
     let arr = [];
@@ -75,7 +78,43 @@ export default function Dashboard() {
     return arr;
   };
 
+  useEffect(() => {
+    let timer = 1000 * 60 * 2;
+    const update = setInterval(() => {
+      updateDashOrders();
+      getDashOrders();
+    }, timer);
+
+    return () => {
+      clearInterval(update);
+    };
+  }, []);
+
   const magicArr = myOrders();
+
+  const bagCount=()=>{
+       let count=0
+     magicArr.forEach(el=>{
+     el.products.forEach(el=>{
+               if(el.productName.includes('Bag - 40 Pcs.')&& el.status !=='Dispatched'){
+                   count+=40
+               }
+               if(el.productName.includes('Bag - 10 Pcs.')&& el.status !=='Dispatched'){
+                count+=10
+            }
+            if(el.productName.includes('Bag - 20 Pcs.')&& el.status !=='Dispatched'){
+              count+=20
+          }
+      })
+     })
+
+     return count
+  }
+
+  if (dashOrders.length === 0) {
+    return <Loading />;
+  }
+
   return (
     <div className="absolute w-full h-[90vh] top-20">
       <div className="flex md:flex-row flex-col mx-2 md:mx-0">
@@ -233,12 +272,35 @@ export default function Dashboard() {
             <input
               type="text"
               placeholder="Search By Product Name"
-              className={`border-none text-center font-extrabold placeholder:text-center outline-none w-56 h-8 mt-2 ${
+              ref={productSearchRef}
+              className={`border-none text-center font-extrabold placeholder:text-center outline-none w-56 h-8  ${
                 dark
                   ? "shadow-emerald-600 bg-slate-600 placeholder:text-slate-50 text-slate-50"
                   : "shadow-blue-200 placeholder:text-blue-500 text-blue-500"
-              } rounded-md shadow-md`}
+              } rounded-l-md shadow-md`}
             />
+            {productSearch ? (
+              <AiOutlineClose
+                className={`w-10 h-8  shadow-md rounded-r-md cursor-pointer ${
+                  dark
+                    ? "text-slate-400 hover:bg-slate-800 shadow-emerald-600 bg-slate-600"
+                    : "shadow-blue-200 text-blue-500"
+                }`}
+                onClick={() => {
+                  productSearchRef.current.value = "";
+                  setProductSearch(false);
+                }}
+              />
+            ) : (
+              <BiSearchAlt
+                className={`w-10 h-8  shadow-md rounded-r-md cursor-pointer ${
+                  dark
+                    ? "text-slate-400 hover:bg-slate-800 shadow-emerald-600 bg-slate-600"
+                    : "shadow-blue-200 text-blue-500"
+                }`}
+                onClick={() => setProductSearch(true)}
+              />
+            )}
           </div>
           <div className={`flex flex-col m-4 items-center justify-center`}>
             <div className={`m-4 relative`}>
@@ -248,11 +310,11 @@ export default function Dashboard() {
                 }`}
               />
               <span
-                className={`absolute top-4 rounded-full text-white w-6 flex justify-center items-center h-6 -right-2 ${
+                className={`absolute top-4 rounded-full text-white font-bold flex justify-center items-center -right-3 ${
                   dark ? "bg-blue-800" : "bg-red-600"
                 }`}
               >
-                4
+               {bagCount()}
               </span>
             </div>
             <div className={`m-4 relative`}>
@@ -389,7 +451,6 @@ export default function Dashboard() {
                   return el;
                 })
                 .filter((el) => {
-                  //eventDateFilter
                   if (eventDate.length > 4) {
                     let input = eventDate.split("-").reverse().join("-");
                     return el.EventDates.includes(input);
@@ -424,6 +485,20 @@ export default function Dashboard() {
                         dispatchRef.current.checked ? "Dispatched" : null
                       )
                     );
+                  }
+                  return el;
+                })
+                .filter((el) => {
+                  if (
+                    productSearch &&
+                    productSearchRef.current.value.length > 2
+                  ) {
+                    let searchTrim =
+                      productSearchRef.current.value.toLowerCase();
+                    return el.productNames
+                      .toString()
+                      .toLowerCase()
+                      .includes(searchTrim);
                   }
                   return el;
                 })
@@ -525,9 +600,22 @@ export default function Dashboard() {
                             }
                             return el;
                           })
-                          .map((el, index) => {
+                          .filter((el) => {
+                            if (
+                              productSearch &&
+                              productSearchRef.current.value.length > 2
+                            ) {
+                              let searchTrim =
+                                productSearchRef.current.value.toLowerCase();
+                              return el.productName
+                                .toLowerCase()
+                                .includes(searchTrim);
+                            }
+                            return el;
+                          })
+                          .map((el) => {
                             return (
-                              <div key={index} className={`flex`}>
+                              <div key={el.id} className={`flex`}>
                                 <div
                                   className={
                                     "flex justify-center items-center flex-col w-96 relative"
@@ -550,7 +638,7 @@ export default function Dashboard() {
                                           }`
                                     } rounded-md flex justify-center items-center w-80 my-2 `}
                                   >
-                                    {el.productName}{" "}
+                                    {el.productName}
                                     {el.productName.includes("Bag") ||
                                     el.productName.includes("bag") ? (
                                       <BsFillBagFill
@@ -561,7 +649,30 @@ export default function Dashboard() {
                                         }`}
                                       />
                                     ) : null}
+
+                                    
                                   </div>
+                                  {(el.productName.includes("Classic") &&
+                          el.productName.includes("Kit")) ||
+                      el.productName.includes("2x3") ||
+                      el.productName.includes("6x4") ||
+                     ( el.productName.includes("2x1.5") &&
+                    !el.productName.includes("Cutout")) ||
+                        el.productName.includes("8x6") ||
+                        (el.productName.includes("Exclusive")&&
+                        el.productName.includes("Kit")) ||
+                        (el.productName.includes("Premium")&&
+                       el.productName.includes("Kit")) ||
+                       el.productName.includes("6X4 ") ||
+                       el.productName.includes("2X1.5 ")? (
+                        <GiKnightBanner
+                          className={`w-10 text-3xl absolute top-2 left-0 ${
+                            dark
+                              ? "text-green-300"
+                              : "text-emerald-400"
+                          }`}
+                        />
+                      ) : null }
                                   <span
                                     className={`absolute w-6 h-6  flex items-center justify-center rounded-full right-5 top-1 ${
                                       dark
