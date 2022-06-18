@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
       department:e.target.department.value
     };
     axios
-      .post("http://localhost:5001/api/signUp", data)
+      .post(process.env.REACT_APP_SIGNUP, data)
       .then((res) => {
         toast(res.data.message, {
           icon: "👏",
