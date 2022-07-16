@@ -1,14 +1,16 @@
 import React from "react";
-import { useContext } from "react";
+import { useContext,useState } from "react";
 import { ThemeContext } from "../App";
 import AuthContext from "../authContext/authProvider";
 import Theme from "../components/theme";
 import { NavLink } from "react-router-dom";
 import { ImHome3 } from "react-icons/im";
 import { motion } from "framer-motion";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"
 export default function SignUp() {
   const { signUp } = useContext(AuthContext);
   const { dark } = useContext(ThemeContext);
+  const [showPass, setPass] = useState(false)
   return (
     <div
       className={`w-full h-[100vh] flex justify-center items-center ${
@@ -58,14 +60,18 @@ export default function SignUp() {
           />
         </div>
         <div className={`flex justify-center items-center flex-col my-2`}>
-          <label>Password Name</label>
-          <input
-            type="text"
-            name="password"
-            className={`${
-              dark ? "bg-slate-800" : "bg-blue-200"
-            } border-none outline-none p-1 rounded-md`}
-          />
+          <label>Password</label>
+          <div className="flex items-center justify-center">
+            <input
+              className={`border-none outline-none p-1 ml-7 rounded-md ${dark ? "bg-slate-800" : "bg-blue-200"
+                }`}
+              type={`${showPass ? "text" : "password"}`}
+              name="password"
+              
+            />
+            {showPass ? <AiFillEye className="w-7 h-8 cursor-pointer" onClick={() => setPass(!showPass)} /> : <AiFillEyeInvisible
+            className="w-7 h-8 cursor-pointer" onClick={() => setPass(!showPass)}/>}
+          </div>
         </div>
         <div className={`flex justify-center items-center flex-col my-2`}>
           <label>Select Your Department</label>
