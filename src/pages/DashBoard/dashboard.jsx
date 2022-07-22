@@ -7,7 +7,7 @@ import { RiDraftLine, RiDraftFill } from "react-icons/ri";
 import { MdOutlineDeliveryDining } from "react-icons/md";
 import { BsFillBagFill } from "react-icons/bs";
 import { BiFilter } from "react-icons/bi";
-import { GiBalloons, GiKnightBanner, GiNotebook } from "react-icons/gi";
+import {GiKnightBanner, GiNotebook } from "react-icons/gi";
 import { motion } from "framer-motion";
 import { FaShippingFast } from "react-icons/fa";
 import Select from "./selectCompo";
@@ -36,6 +36,10 @@ export default function Dashboard() {
   const productSearchRef = useRef("");
 
   const [productSearch, setProductSearch] = useState(false);
+
+  const [orderedDate,setOrderedDate]=useState("")
+
+  console.log(orderedDate)
 
   const myOrders = () => {
     let arr = [];
@@ -91,6 +95,8 @@ export default function Dashboard() {
   }, []);
 
   const magicArr = myOrders();
+
+  console.log(magicArr)
 
   const bagCount=()=>{
        let count=0
@@ -317,20 +323,24 @@ export default function Dashboard() {
                {bagCount()}
               </span>
             </div>
-            <div className={`m-4 relative`}>
-              <GiBalloons
-                className={`text-4xl ${
-                  dark ? "text-slate-600" : "text-blue-800"
-                }`}
-              />
-            </div>
-            <div className={`m-4 relative`}>
-              <GiKnightBanner
-                className={`text-4xl ${
-                  dark ? "text-slate-600" : "text-blue-800"
-                }`}
-              />
-            </div>
+            <div
+            className={`flex flex-col justify-center items-center rounded-md p-2 m-2  `}
+          >
+            <span
+              className={`${
+                dark ? "text-slate-300" : "text-blue-500"
+              } font-extrabold m-1`}
+            >
+              Filter By Ordered Date
+            </span>
+            <input
+              type="date"
+              onChange={(e)=>setOrderedDate(e.target.value)}
+              className={`${
+                dark ? "bg-slate-600 text-white" : ""
+              } shadow-md border-none outline-none rounded-md p-1`}
+            />
+          </div>
           </div>
           <motion.button
             whileHover={{ scale: 1.2 }}
@@ -434,6 +444,11 @@ export default function Dashboard() {
                     return el.order_number === input;
                   }
                   return el;
+                }).filter((el)=>{
+                  if(orderedDate.length>0){
+                    return(el.orderDate.includes(orderedDate))
+                  }
+                  return el
                 })
                 .filter((el) => {
                   //filter for order Delivery Type
