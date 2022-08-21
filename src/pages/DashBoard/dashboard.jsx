@@ -145,7 +145,7 @@ export default function Dashboard() {
               className={`border-none text-center font-extrabold placeholder:text-center outline-none w-56 h-8  ${dark
                 ? "shadow-emerald-600 bg-slate-600 placeholder:text-slate-50 text-slate-50"
                 : "shadow-blue-200 placeholder:text-blue-500 text-blue-500"
-                } rounded-l-md shadow-md`}
+                } rounded-md shadow-md`}
             />
             {/* {search ? (
               <AiOutlineClose
