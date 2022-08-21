@@ -15,14 +15,14 @@ import Loading from "../../components/loading";
 import axios from "axios";
 export default function Dashboard() {
   const { dashOrders, updateDashOrders, getDashOrders } = useContext(orderContext);
-  const [search, setSearch] = useState(false);
+  //const [search, setSearch] = useState(false);
   const { dark } = useContext(ThemeContext);
   const [showCustomerNotes, setCustomerNotes] = useState(false);
   const [showDraft, setDraft] = useState(false);
   const [showFree, setFree] = useState(false);
   const [showPriority, setPriority] = useState(false);
   const [showFilters, setFilters] = useState(false);
-  const searchRef = useRef("");
+  const [search,setSearch] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [apply, setApply] = useState(false);
   const pendingRef = useRef({ checked: false });
@@ -141,13 +141,13 @@ export default function Dashboard() {
             <input
               type="text"
               placeholder="Search By Order No"
-              ref={searchRef}
+              onChange={(e)=>setSearch(e.target.value)}
               className={`border-none text-center font-extrabold placeholder:text-center outline-none w-56 h-8  ${dark
                 ? "shadow-emerald-600 bg-slate-600 placeholder:text-slate-50 text-slate-50"
                 : "shadow-blue-200 placeholder:text-blue-500 text-blue-500"
                 } rounded-l-md shadow-md`}
             />
-            {search ? (
+            {/* {search ? (
               <AiOutlineClose
                 className={`w-10 h-8  shadow-md rounded-r-md cursor-pointer ${dark
                   ? "text-slate-400 hover:bg-slate-800 shadow-emerald-600 bg-slate-600"
@@ -166,7 +166,7 @@ export default function Dashboard() {
                   }`}
                 onClick={() => setSearch(true)}
               />
-            )}
+            )} */}
           </div>
           <div
             className={`${dark ? "bg-slate-700 text-white" : "bg-blue-100 text-blue-800"
@@ -433,10 +433,10 @@ export default function Dashboard() {
               {magicArr
                 .filter((el) => {
                   //order number filter
-                  if (search && searchRef.current.value.length > 3) {
-                    let input = parseInt(searchRef.current.value);
+                  if (search.length >4 ) {
+                    let input = parseInt(search);
                     return el.order_number === input;
-                  }
+                  } 
                   return el;
                 }).filter((el) => {
                   if (orderedDate.length > 0) {
